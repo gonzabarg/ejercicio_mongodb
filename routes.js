@@ -1,70 +1,54 @@
-const express = require('express');
+const express = require("express");
 
 const router = express.Router();
 
-const userController = require('./userController');
+const userController = require("./userController");
 
 //----------------BASE DE DATOS------------------//
 
-const mysql = require('mysql2');
-
+const mysql = require("mysql2");
 
 const connection = mysql.createConnection({
-    host : 'localhost',
-    user : 'root',
-    password : 'root',
-    database : 'ha_ejercicio_20'
+  host: "localhost",
+  user: "root",
+  password: "root",
+  database: "ha_ejercicio_20",
 });
 
-connection.connect(function(err) {
-    if (err) throw err;
+connection.connect(function (err) {
+  if (err) throw err;
 
-    console.log('Conectado');
+  console.log("Conectado");
 });
-
-
 
 //------------------RUTAS--------------------//
 
-router.get('/usuarios', userController.show);
+router.get("/usuarios", userController.show);
 
-router.get('/usuarios/crear', (req, res) => {
+router.get("/usuarios/crear", (req, res) => {
+  console.log("Alguien quiere crear un usuario");
 
-    console.log('Alguien quiere crear un usuario')
+  const newUser = req.query.params;
 
-    const newUser = req.query.params;
+  console.log(newUser);
 
-    console.log(newUser);
-
-    res.render('crear');
+  res.render("crear");
 });
 
+router.get("/usuarios/editar/:id", (req, res) => {
+  console.log("Alguien quiere editar un usuario");
 
-router.get('/usuarios/editar/:id', (req, res) => {
+  const queryId = req.params.id;
 
-    
-    console.log('Alguien quiere editar un usuario');
+  console.log(queryId);
 
-    res.render('editar');
+  res.render("editar", { queryId });
 });
 
-router.post('/usuarios', (req, res) => {
+router.post("/usuarios/crear", userController.create);
 
-    console.log('Post usuarios');
+router.post("/usuarios/editar/:id", userController.update);
 
-    res.send('Post usuarios');
-});
-
-router.post('/usuarios/editar/:id', (req, res) => {
-
-    console.log('Post editar usuario');
-
-    res.send('Post editar usuario');
-});
-
-router.get('/usuarios/eliminar/:id', userController.delete);
-
-
-
+router.get("/usuarios/eliminar/:id", userController.delete);
 
 module.exports = router;
