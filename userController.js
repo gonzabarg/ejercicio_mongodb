@@ -1,79 +1,58 @@
 //----------------BASE DE DATOS------------------//
 
-const mysql = require("mysql2");
+// const mysql = require("mysql2");
 
-const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "root",
-  database: "ha_ejercicio_20",
-});
+// const connection = mysql.createConnection({
+//   host: "localhost",
+//   user: "root",
+//   password: "root",
+//   database: "ha_ejercicio_20",
+// });
 
-connection.connect(function (err) {
-  if (err) throw err;
+// connection.connect(function (err) {
+//   if (err) throw err;
 
-  console.log("Conectado");
-});
+//   console.log("Conectado");
+// });
+
+const User = require("./models/user");
+const { firstUser } = require("./seeders/userSeeder");
 
 module.exports = {
-  show: (req, res) => {
-    connection.query("SELECT * FROM users", function (err, users) {
-      if (err) throw err;
+  show: async function (req, res) {
+    firstUser;
+    const users = await User.find();
+    console.log(users);
+    res.render("usuarios", { users });
+  },
 
-      console.log(users);
+  create: async function (req, res) {
+    const firstname = req.body.firstname;
+    const lastname = req.body.lastname;
+    const age = req.body.age;
 
-      res.render("usuarios", { users: users });
+    const user = new User({
+      firstname: firstname,
+      lastname: lastname,
+      age: age,
     });
-  },
 
-  delete: (req, res) => {
-    console.log("Eliminar usuario");
+    try {
+      const savedUser = await user.save();
+      console.log(savedUser);
+      res.redirect("/usuarios");
+    } catch (error) {
+      console.log(error);
+    }
 
-    const userID = req.params.id;
+    // connection.query(
+    //   `INSERT INTO users (firstname, lastname, age) VALUES ("${firstname}", "${lastname}", "${age}")`,
+    //   function (err, users) {
+    //     if (err) throw err;
+    //     console.log(users);
 
-    connection.query(
-      "DELETE FROM users WHERE id = " + connection.escape(userID),
-      function (err, users) {
-        if (err) throw err;
-        console.log(users);
-
-        res.redirect("/usuarios");
-      }
-    );
-  },
-
-  update: (req, res) => {
-    const userId = req.params.id;
-    const firstname = req.body.firstname;
-    const lastname = req.body.lastname;
-    const age = req.body.age;
-
-    connection.query(
-      `UPDATE users SET firstname = "${firstname}", lastname = "${lastname}", age = ${age} WHERE id = ${connection.escape(
-        userId
-      )}`,
-      function (err, users) {
-        if (err) throw err;
-        console.log(users);
-
-        res.redirect("/usuarios");
-      }
-    );
-  },
-
-  create: (req, res) => {
-    const firstname = req.body.firstname;
-    const lastname = req.body.lastname;
-    const age = req.body.age;
-
-    connection.query(
-      `INSERT INTO users (firstname, lastname, age) VALUES ("${firstname}", "${lastname}", "${age}")`,
-      function (err, users) {
-        if (err) throw err;
-        console.log(users);
-
-        res.redirect("/usuarios");
-      }
-    );
+    //     res.redirect("/usuarios");
+    //   }
+    // );
   },
 };

@@ -6,20 +6,20 @@ const userController = require("./userController");
 
 //----------------BASE DE DATOS------------------//
 
-const mysql = require("mysql2");
+// const mysql = require("mysql2");
 
-const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "root",
-  database: "ha_ejercicio_20",
-});
+// const connection = mysql.createConnection({
+//   host: "localhost",
+//   user: "root",
+//   password: "root",
+//   database: "ha_ejercicio_20",
+// });
 
-connection.connect(function (err) {
-  if (err) throw err;
+// connection.connect(function (err) {
+//   if (err) throw err;
 
-  console.log("Conectado");
-});
+//   console.log("Conectado");
+// });
 
 //------------------RUTAS--------------------//
 
@@ -47,8 +47,8 @@ router.get("/usuarios/editar/:id", (req, res) => {
 
 router.post("/usuarios/crear", userController.create);
 
-router.post("/usuarios/editar/:id", userController.update);
+router.post("/usuarios/editar/:id");
 
-router.get("/usuarios/eliminar/:id", userController.delete);
+router.get("/usuarios/eliminar/:id");
 
 module.exports = router;
