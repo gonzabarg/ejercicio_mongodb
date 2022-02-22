@@ -1,58 +1,55 @@
-//----------------BASE DE DATOS------------------//
-
-// const mysql = require("mysql2");
-
-// const connection = mysql.createConnection({
-//   host: "localhost",
-//   user: "root",
-//   password: "root",
-//   database: "ha_ejercicio_20",
-// });
-
-// connection.connect(function (err) {
-//   if (err) throw err;
-
-//   console.log("Conectado");
-// });
-
 const User = require("./models/user");
 const { firstUser } = require("./seeders/userSeeder");
 
 module.exports = {
-  show: async function (req, res) {
-    firstUser;
-    const users = await User.find();
-    console.log(users);
-    res.render("usuarios", { users });
-  },
+	show: async function (req, res) {
+		firstUser;
+		const users = await User.find();
+		console.log(users);
+		res.render("usuarios", { users });
+	},
 
-  create: async function (req, res) {
-    const firstname = req.body.firstname;
-    const lastname = req.body.lastname;
-    const age = req.body.age;
+	create: async function (req, res) {
+		const firstname = req.body.firstname;
+		const lastname = req.body.lastname;
+		const age = req.body.age;
 
-    const user = new User({
-      firstname: firstname,
-      lastname: lastname,
-      age: age,
-    });
+		const user = new User({
+			firstname: firstname,
+			lastname: lastname,
+			age: age,
+		});
 
-    try {
-      const savedUser = await user.save();
-      console.log(savedUser);
-      res.redirect("/usuarios");
-    } catch (error) {
-      console.log(error);
-    }
+		try {
+			const savedUser = await user.save();
+			console.log(savedUser);
+			res.redirect("/usuarios");
+		} catch (error) {
+			console.log(error);
+		}
+	},
 
-    // connection.query(
-    //   `INSERT INTO users (firstname, lastname, age) VALUES ("${firstname}", "${lastname}", "${age}")`,
-    //   function (err, users) {
-    //     if (err) throw err;
-    //     console.log(users);
+	showById: async function (req, res) {
+		const userToShow = await User.findById(req.params.id);
+		console.log(userToShow);
+		res.render("editar", { userToShow });
+	},
 
-    //     res.redirect("/usuarios");
-    //   }
-    // );
-  },
+	edit: async function (req, res) {
+		const userToEdit = await User.updateOne(
+			{ _id: req.params.id },
+			{
+				firstname: req.body.firstname,
+				lastname: req.body.lastname,
+				age: req.body.age,
+			}
+		);
+		console.log(req.body);
+		res.redirect("/usuarios");
+	},
+
+	delete: async function (req, res) {
+		const userToDelete = await User.remove({ _id: req.params.id });
+		res.redirect("/usuarios");
+	},
 };

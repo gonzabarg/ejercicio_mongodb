@@ -26,29 +26,31 @@ const userController = require("./userController");
 router.get("/usuarios", userController.show);
 
 router.get("/usuarios/crear", (req, res) => {
-  console.log("Alguien quiere crear un usuario");
+	console.log("Alguien quiere crear un usuario");
 
-  const newUser = req.query.params;
+	const newUser = req.query.params;
 
-  console.log(newUser);
+	console.log(newUser);
 
-  res.render("crear");
+	res.render("crear");
 });
 
-router.get("/usuarios/editar/:id", (req, res) => {
-  console.log("Alguien quiere editar un usuario");
+// router.get("/usuarios/editar/:id", (req, res) => {
+// 	console.log("Alguien quiere editar un usuario");
 
-  const queryId = req.params.id;
+// 	const queryId = req.params.id;
 
-  console.log(queryId);
+// 	console.log(queryId);
 
-  res.render("editar", { queryId });
-});
+// 	res.render("editar", { queryId });
+// });
+
+router.get("/usuarios/editar/:id", userController.showById);
 
 router.post("/usuarios/crear", userController.create);
 
-router.post("/usuarios/editar/:id");
+router.post("/usuarios/editar/:id", userController.edit);
 
-router.get("/usuarios/eliminar/:id");
+router.get("/usuarios/eliminar/:id", userController.delete);
 
 module.exports = router;
